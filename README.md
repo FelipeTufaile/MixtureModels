@@ -19,7 +19,7 @@ pip install MixtureModels
 
 ## Getting Started
 
-To get started with the library, refer to the [documentation](https://github.com/your-username/mixture-models-library/docs) for detailed usage examples, API reference, and tutorials.
+To get started with the library, refer to the [documentation](https://github.com/FelipeTufaile/MixtureModels/docs) for detailed usage examples, API reference, and tutorials.
 
 ```python
 from MixtureModels import GaussianMixtureModel
