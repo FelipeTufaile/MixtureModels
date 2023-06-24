@@ -1,4 +1,9 @@
+"""Mixture model for matrix completion"""
+from typing import Tuple
 import numpy as np
+from scipy.special import logsumexp
+from common import GaussianMixture
+
 
 def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
     """E-step: Softly assigns each datapoint to a gaussian component
@@ -19,7 +24,7 @@ def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
         return p
 
     ## GAUSSIAN MIXTURE PROPERTIES
-    # GMM = mixture[0]
+    #GMM = mixture[0]
 
     n = len(X) #dataset size
     k = mixture.mu.shape[0] #number of clusters
@@ -34,25 +39,26 @@ def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
 
         for j in range(0, k): #over all the clusters
 
-            # Calculating the likelihood for each data point regarding to each cluster
+            #Calculating the likelihood for each data point regarding to each cluster
             p_x_theta_k = mixture.p[j]*gaussian(mixture.mu[j], mixture.var[j], d, X[i])
 
-            # Updating 'p_x_theta_k' list
+            #Updating 'p_x_theta_k' list
             p_x_theta_ks.append(p_x_theta_k) 
 
-            # Calculating total likelihood for each data point
+            #Calculating total likelihood for each data point
             p_x_theta += p_x_theta_k
 
-        # Calculating the likelihood for each cluster
+        #Calculating the likelihood for each cluster
         likelihoods = p_x_theta_ks/p_x_theta
         
-        # log-likelihood update
+        #log-likelihood update
         l_theta += np.log(p_x_theta)
 
-        # Assigning X[i] to the cluster where it has the greatest likelihood
+        #Assigning X[i] to the cluster where it has the greatest likelihood
         post.append(likelihoods.tolist())
                
     return np.array(post), l_theta 
+
 
 
 def mstep(X: np.ndarray, post: np.ndarray) -> GaussianMixture:
@@ -85,6 +91,7 @@ def mstep(X: np.ndarray, post: np.ndarray) -> GaussianMixture:
     return GaussianMixture(mu, var, p)
 
 
+
 def run(X: np.ndarray, mixture: GaussianMixture,
         post: np.ndarray) -> Tuple[GaussianMixture, np.ndarray, float]:
     """Runs the mixture model
@@ -109,27 +116,3 @@ def run(X: np.ndarray, mixture: GaussianMixture,
         mixture = mstep(X, post)
 
     return mixture, post, l_theta
-
-
-def bic(X: np.ndarray, mixture: GaussianMixture,
-        log_likelihood: float) -> float:
-    """Computes the Bayesian Information Criterion for a
-    mixture of gaussians
-
-    Args:
-        X: (n, d) array holding the data
-        mixture: a mixture of spherical gaussian
-        log_likelihood: the log-likelihood of the data
-
-    Returns:
-        float: the BIC for this mixture
-    """
-    
-    n, d = X.shape
-    K, _ = mixture.mu.shape
-    
-    p = K*(d + 2) - 1
-    
-    return log_likelihood - 0.5*p*np.log(n)
-    
-    
