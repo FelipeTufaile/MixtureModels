@@ -49,11 +49,11 @@ If you find this library helpful in your research or work, please consider citin
 ```
 @misc{mixturemodelslibrary,
   author = {Felipe Tufaile},
-  title = {Mixture Models},
+  title = {MixtureModels},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/your-username/MixtureModels}},
+  howpublished = {\url{https://github.com/FelipeTufaile/MixtureModels}},
 }
 ```
 
